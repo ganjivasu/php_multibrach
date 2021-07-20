@@ -1,22 +1,24 @@
-// USE THE CORRECT LIBRARY TO BUILD FROM. FOR A TAGGED VERSION TO BE BUILD USE THE CORRESPONDING VERSION of shared library.
-
 pipeline {
-    agent any
+agent any
 
-    environment {       
-        GIT_BRANCH = utility.get_git_branch_edited(env.BRANCH_NAME) 
-    } 
-    stages
-    {
-        stage('test')
-        {
-            steps
-            {
-                echo "hello world"
-            }
-        }
-    }
-    
+stages {
+stage('Restore PACKAGES') {
+steps {
+bat "dotnet restore"
 }
-
-   
+}
+stage('Clean') {
+steps {
+bat 'dotnet clean'
+}
+}
+stage('Build') {
+steps {
+bat 'dotnet build'
+}
+}
+stage('Pack') {
+steps {
+bat 'dotnet pack --no-build --output nupkgs'
+}
+}
